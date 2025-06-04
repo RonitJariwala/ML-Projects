@@ -1,19 +1,14 @@
 # F1nalyze - Predicting Formula 1 Driver Standings with Machine Learning🚀
 
-## Project Overview
-
-This project, **F1nalyze**, was developed as part of the [F1nalyze - Formula 1 Datathon](https://www.kaggle.com/competitions/f1nalyze-datathon-ieeecsmuj/overview) on Kaggle. The goal of the project was to build machine learning models that accurately predict the finishing positions of Formula 1 drivers based on historical race data.
-
-To explore the code interactively, you can access the project on [Google Colab](https://colab.research.google.com/drive/16dQWIdir3W_m-Wpw0i0w-ioV8ADJCcD9?usp=sharing). This allows you to run the code, tweak the models, and see the results in real time.
-
-Our team, **Frostbiters**, placed 23rd out of 50 teams with a final score of **3.46918** on the leaderboard. Though we didn’t secure a win, the experience was incredibly enriching, offering deep insights into predictive modeling, data preprocessing, and the application of machine learning algorithms.
-
-## Dataset Description
+### Dataset Description
 
 We were provided with three CSV files:
 - `train.csv`: Training data used to train the models.
 - `test.csv`: Testing data for which we had to predict and submit the output with minimum RMSE.
 - `validation.csv`: Validation data used to validate our model's prediction and try to reduce RMSE.
+
+Download Dataset From This Link:
+https://www.kaggle.com/competitions/f1nalyze-datathon-ieeecsmuj/data
 
 ## Data Preprocessing
 
@@ -60,9 +55,6 @@ Predictions were made on the test dataset using all three models, and the result
 - `rf_predictions.csv`: Random Forest predictions.
 - `lr_predictions.csv`: Logistic Regression predictions.
 
-## Leaderboard Performance
-
-Our best entry placed us **23rd** on the leaderboard with a score of **3.46918**. The leaderboard was highly competitive, and the top-performing teams demonstrated impressive predictive accuracy.
 
 ## Learnings and Insights
 
@@ -78,13 +70,3 @@ Despite not winning, the F1nalyze project was a significant learning opportunity
 
 The F1nalyze project showcased the potential of machine learning in predicting complex outcomes in sports analytics. We look forward to further refining our models and exploring additional features and techniques to improve prediction accuracy in future endeavors.
 
-## Access the Project on Google Colab
-
-To interact with the code, visit the [Google Colab Notebook](https://colab.research.google.com/drive/16dQWIdir3W_m-Wpw0i0w-ioV8ADJCcD9?usp=sharing).
-
----
-
-
-## License
-
-This project is licensed under the MIT License.
