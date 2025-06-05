@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Car Price Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🚗 Car Price Predictor</h1>
+        <form method="POST" onsubmit="send_data(); return false;">
+            <label for="company">Select Company:</label>
+            <select id="company" name="company" onchange="load_car_models('company', 'car_model')" required>
+                <option value="" disabled selected>Select a company</option>
+            </select>
+
+            <label for="car_model">Select Model:</label>
+            <select id="car_model" name="car_model" required>
+                <option value="" disabled selected>Select a model</option>
+            </select>
+
+            <label for="year">Year:</label>
+            <input type="number" name="year" id="year" placeholder="e.g., 2017" min="1990" max="2024" required>
+
+            <label for="fuel_type">Fuel Type:</label>
+            <select name="fuel_type" id="fuel_type" required>
+                <option value="" disabled selected>Select fuel type</option>
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="CNG">CNG</option>
+            </select>
+
+            <label for="kms_driven">KMs Driven:</label>
+            <input type="number" name="kms_driven" id="kms_driven" placeholder="e.g., 50000" min="0" required>
+
+            <button type="submit">🔮 Predict Price</button>
+        </form>
+
+        <div id="prediction_result"></div>
+    </div>
+
+    <script type="application/json" id="company-models-data">
+        {{ company_models | tojson | safe }}
+    </script>
+
+    <!-- JavaScript functions -->
+    <script>
+        let companyModels = {};
+        try {
+            const dataElement = document.getElementById('company-models-data');
+            if (dataElement && dataElement.textContent) {
+                companyModels = JSON.parse(dataElement.textContent);
+            }
+        } catch (e) {
+            console.error('Error parsing company models data:', e);
+            companyModels = {
+                'Maruti': ['Swift', 'Baleno', 'Alto', 'Wagon R'],
+                'Hyundai': ['i20', 'Creta', 'Verna', 'Grand i10'],
+                'Honda': ['City', 'Civic', 'Amaze', 'Jazz'],
+                'Toyota': ['Innova', 'Fortuner', 'Corolla', 'Camry']
+            };
+        }
+
+        function populateCompanies() {
+            const companySelect = document.getElementById('company');
+            companySelect.innerHTML = '<option value="" disabled selected>Select a company</option>';
+            
+            Object.keys(companyModels).forEach(function(company) {
+                const option = document.createElement('option');
+                option.value = company;
+                option.textContent = company;
+                companySelect.appendChild(option);
+            });
+        }
+
+        function load_car_models(company_id, car_model_id) {
+            const company = document.getElementById(company_id).value;
+            const modelSelect = document.getElementById(car_model_id);
+            
+            modelSelect.innerHTML = '<option value="" disabled selected>Select a model</option>';
+
+            if (company && companyModels[company]) {
+                const models = companyModels[company];
+                models.forEach(function(model) {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    modelSelect.appendChild(option);
+                });
+            }
+        }
+
+        function send_data() {
+            const company = document.getElementById('company').value;
+            const carModel = document.getElementById('car_model').value;
+            const year = document.getElementById('year').value;
+            const fuelType = document.getElementById('fuel_type').value;
+            const kmsDriven = document.getElementById('kms_driven').value;
+
+            if (!company || !carModel || !year || !fuelType || !kmsDriven) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const formData = {
+                company: company,
+                car_model: carModel,
+                year: parseInt(year),
+                fuel_type: fuelType,
+                kms_driven: parseInt(kmsDriven)
+            };
+
+            const resultDiv = document.getElementById('prediction_result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading">🔄 Calculating price...</div>';
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/predict', true);
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response.predicted_price) {
+                                resultDiv.innerHTML = `💰 Predicted Price: ₹${response.predicted_price.toLocaleString('en-IN')}`;
+                                resultDiv.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
+                            } else if (response.error) {
+                                resultDiv.innerHTML = `❌ Error: ${response.error}`;
+                                resultDiv.style.background = 'linear-gradient(45deg, #f44336, #d32f2f)';
+                            }
+                        } catch (e) {
+                            resultDiv.innerHTML = '❌ Error parsing response';
+                            resultDiv.style.background = 'linear-gradient(45deg, #f44336, #d32f2f)';
+                        }
+                    } else {
+                        resultDiv.innerHTML = `❌ Server Error: ${xhr.status}`;
+                        resultDiv.style.background = 'linear-gradient(45deg, #f44336, #d32f2f)';
+                    }
+                }
+            };
+
+            xhr.onerror = function() {
+                resultDiv.innerHTML = '❌ Network Error. Please try again.';
+                resultDiv.style.background = 'linear-gradient(45deg, #f44336, #d32f2f)';
+            };
+
+            xhr.send(JSON.stringify(formData));
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            populateCompanies();
+        });
+    </script>
+</body>
+</html>
