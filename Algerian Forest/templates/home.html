@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algerian Forest Fire Prediction</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f7f7f7; color: #222; margin: 0; padding: 0; }
+        .container { max-width: 720px; margin: 40px auto; padding: 24px; background: #fff; border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+        h1 { margin-bottom: 24px; font-size: 2rem; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        label { display: flex; flex-direction: column; font-size: 0.95rem; }
+        input, select { margin-top: 8px; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; width: 100%; box-sizing: border-box; }
+        .full-width { grid-column: 1 / -1; }
+        button { margin-top: 24px; padding: 12px 22px; border: none; border-radius: 8px; background: #00897b; color: #fff; font-size: 1rem; cursor: pointer; }
+        button:hover { background: #00695c; }
+        .note { margin-top: 16px; font-size: 0.95rem; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Forest Fire Risk Prediction</h1>
+        <form action="{{ url_for('predict_datapoint') }}" method="post">
+            <div class="grid">
+                <label>
+                    Day
+                    <input type="number" name="day" min="1" max="31" step="1" required>
+                </label>
+                <label>
+                    Month
+                    <select name="month" required>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6" selected>June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </label>
+                <label>
+                    Year
+                    <input type="number" name="year" min="2000" max="2100" step="1" required>
+                </label>
+                <label>
+                    Temperature (°C)
+                    <input type="number" name="Temperature" step="0.1" required>
+                </label>
+                <label>
+                    Relative Humidity (%)
+                    <input type="number" name="RH" step="0.1" min="0" max="100" required>
+                </label>
+                <label>
+                    Wind Speed (Ws)
+                    <input type="number" name="Ws" step="0.1" required>
+                </label>
+                <label>
+                    Rain (mm)
+                    <input type="number" name="Rain" step="0.1" min="0" required>
+                </label>
+                <label>
+                    FFMC
+                    <input type="number" name="FFMC" step="0.1" required>
+                </label>
+                <label>
+                    DMC
+                    <input type="number" name="DMC" step="0.1" required>
+                </label>
+                <label>
+                    DC
+                    <input type="number" name="DC" step="0.1" required>
+                </label>
+                <label>
+                    ISI
+                    <input type="number" name="ISI" step="0.1" required>
+                </label>
+                <label>
+                    BUI
+                    <input type="number" name="BUI" step="0.1" required>
+                </label>
+                <label>
+                    FWI
+                    <input type="number" name="FWI" step="0.1" required>
+                </label>
+                <label>
+                    Classes
+                    <input type="text" name="Classes" step="0.1" required>
+                </label>
+                <label>
+                    Region
+                    <input type="text" name="Region" step="0.1" required>
+                </label>
+                <label class="full-width">
+                    Region
+                    <select name="Region" required>
+                        <option value="0">Region 0</option>
+                        <option value="1">Region 1</option>
+                        <option value="2">Region 2</option>
+                    </select>
+                </label>
+            </div>
+            <button type="submit">Predict Fire Risk</button>
+        </form>
+        <h2>
+            THE FWI prediction is {{results}}
+        </h2>
+        <p class="note">The form submits to <code>/predictdata</code> and uses the Flask route <code>predict_datapoint</code>.</p>
+    </div>
+</body>
+</html>
